@@ -1,40 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Temple Crowdfunding Platform
 
-## Getting Started
+**Live Demo:** [https://temple-crowdfunding-8o3g.vercel.app](https://temple-crowdfunding-8o3g.vercel.app/)  
 
-First, run the development server:
+Temples are the heart of our culture, but many of them need renovations and care. This platform is my attempt to make donating easier, transparent, and meaningful. Here, anyone can create a campaign, donate securely, and track the progress of temple renovations.  
 
+Built with **React.js**, **Next.js**, **Tailwind CSS**, and **GSAP animations**, it’s designed to be both functional and visually appealing. Payments are handled with **Razorpay**, ensuring everything is safe and smooth.  
+
+The idea is not just to build a website, but a **real-world project** that looks professional, works seamlessly, and can be showcased to top companies.  
+
+---
+
+## 🌟 Features
+
+- **User Authentication:** Sign up and log in easily using email.  
+- **Campaign Management:**  
+  - Create, edit, and delete temple renovation campaigns.  
+  - Set fundraising goals and upload campaign images.  
+- **Donation System:**  
+  - Integrated with **Razorpay** for safe and seamless payments.  
+  - Keep track of donations per campaign.  
+- **Interactive Dashboard:**  
+  - Browse all campaigns and see top-funded ones.  
+  - Sort and filter campaigns by goal, date, or popularity.  
+- **AI Chat Board (Advanced Feature):**  
+  - Chat with an AI assistant for temple-related queries and suggestions.  
+- **Beautiful & Responsive UI:**  
+  - Designed with **Tailwind CSS** for a clean, modern look.  
+  - Smooth animations using **GSAP** for hero sections, buttons, and scroll interactions.  
+- **SEO & Performance Optimized:**  
+  - Built with Next.js for fast load times and SEO-friendly pages.  
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend:** React.js, Next.js  
+- **Styling & Animations:** Tailwind CSS, GSAP  
+- **Payments:** Razorpay API  
+- **Backend / Database:** Next.js API routes, MongoDB / Firebase (optional)  
+- **Deployment:** Vercel  
+- **Version Control:** Git + GitHub  
+
+---
+
+## 🚀 How to Run Locally
+
+1. **Clone the repository**  
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+git clone https://github.com/Ritikajaiswal2707/temple-crowdfunding.git
+cd temple-crowdfunding
