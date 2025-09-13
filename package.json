@@ -2,15 +2,12 @@
   "name": "temple-crowdfunding",
   "version": "0.1.0",
   "private": true,
-  
-  {
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
-  }
-}
+  },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.10.0",
     "@gsap/react": "^2.1.2",
