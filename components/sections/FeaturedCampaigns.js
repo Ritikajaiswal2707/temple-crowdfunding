@@ -29,10 +29,6 @@ const FeaturedCampaigns = () => {
     }
   };
 
-  const getProgressPercentage = (raised, goal) => {
-    return Math.round((raised / goal) * 100);
-  };
-
   const formatAmount = (amount) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -50,7 +46,7 @@ const FeaturedCampaigns = () => {
               Featured Campaigns
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Loading campaigns...
+              Loading temple campaigns...
             </p>
           </div>
           
@@ -129,28 +125,34 @@ const FeaturedCampaigns = () => {
                         alt={campaign.title}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          e.target.src = 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop';
+                          // Use a simple gradient background if image fails to load
+                          e.target.style.display = 'none';
+                          e.target.nextElementSibling.style.display = 'flex';
                         }}
                       />
-                    ) : (
-                      <div className="bg-gradient-to-r from-orange-200 to-yellow-200 h-full flex items-center justify-center">
-                        <div className="text-orange-600">
-                          <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                          </svg>
-                        </div>
+                    ) : null}
+                    
+                    {/* Fallback Background */}
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-r from-orange-200 to-yellow-200 flex items-center justify-center"
+                      style={{ display: 'none' }}
+                    >
+                      <div className="text-orange-600">
+                        <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                        </svg>
                       </div>
-                    )}
+                    </div>
 
                     {/* Category Badge */}
                     <div className="absolute top-4 left-4">
                       <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium capitalize">
-                        {campaign.category.replace('_', ' ')}
+                        {campaign.category?.replace('_', ' ') || 'Temple'}
                       </span>
                     </div>
 
                     {/* Days Left Badge */}
-                    {campaign.daysLeft !== null && (
+                    {campaign.daysLeft !== null && campaign.daysLeft !== undefined && (
                       <div className="absolute top-4 right-4">
                         <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
                           {campaign.daysLeft > 0 ? `${campaign.daysLeft} days left` : 'Ended'}
@@ -166,29 +168,29 @@ const FeaturedCampaigns = () => {
                     </h3>
 
                     <p className="text-orange-600 text-sm font-medium mb-3">
-                      🏛️ {campaign.temple.name}
-                      {campaign.temple.location?.city && ` • ${campaign.temple.location.city}`}
+                      🏛️ {campaign.temple?.name || 'Temple'}
+                      {campaign.temple?.location?.city && ` • ${campaign.temple.location.city}`}
                     </p>
 
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    <p className="text-gray-600 text-sm mb-4">
                       {campaign.description}
                     </p>
 
                     {/* Progress Bar */}
                     <div className="mb-4">
                       <div className="flex justify-between text-sm text-gray-600 mb-2">
-                        <span>Raised: {formatAmount(campaign.raisedAmount)}</span>
-                        <span>{campaign.progress}%</span>
+                        <span>Raised: {formatAmount(campaign.raisedAmount || 0)}</span>
+                        <span>{campaign.progress || 0}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
                           className="bg-gradient-to-r from-orange-500 to-yellow-500 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${Math.min(campaign.progress, 100)}%` }}
+                          style={{ width: `${Math.min(campaign.progress || 0, 100)}%` }}
                         ></div>
                       </div>
                       <div className="flex justify-between text-sm text-gray-500 mt-2">
-                        <span>Goal: {formatAmount(campaign.goalAmount)}</span>
-                        <span>{campaign.donorCount} donors</span>
+                        <span>Goal: {formatAmount(campaign.goalAmount || 0)}</span>
+                        <span>{campaign.donorCount || 0} donors</span>
                       </div>
                     </div>
 
@@ -196,7 +198,6 @@ const FeaturedCampaigns = () => {
                     <div className="flex space-x-3">
                       <button
                         onClick={() => {
-                          console.log('Donate to campaign:', campaign.id);
                           alert(`Donation feature coming soon for: ${campaign.title}`);
                         }}
                         className="flex-1 bg-orange-500 text-white text-center py-2 px-4 rounded-lg font-medium hover:bg-orange-600 transition-colors duration-300" 
@@ -204,8 +205,8 @@ const FeaturedCampaigns = () => {
                         Donate Now
                       </button>
                       <Link
-                        href={`/campaigns`}
-                        className="flex-1 border border-orange-500 text-orange-500 text-center py-2 px-4 rounded-lg font-medium hover:bg-orange-50 transition-colors duration-300"
+                        href="/campaigns"
+                        className="flex-1 border border-orange-500 text-orange-500 text-center py-2 px-4 rounded-lg font-medium hover:bg-orange-50 transition-colors duration-300 flex items-center justify-center"
                       >
                         View Details
                       </Link>
