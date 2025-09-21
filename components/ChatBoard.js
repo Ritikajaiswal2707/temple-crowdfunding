@@ -4,9 +4,10 @@ const ChatBoard = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Namaste! I'm your AI assistant for temple crowdfunding. How can I help you today?",
+      text: "Namaste! 🙏 I'm your AI assistant for temple crowdfunding. I can help you with creating campaigns, making donations, and answering questions about our platform. How can I assist you today?",
       sender: 'ai',
-      timestamp: new Date()
+      timestamp: new Date(),
+      suggestions: ['How to create a campaign?', 'Browse temple campaigns', 'Learn about donations']
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
@@ -51,7 +52,9 @@ const ChatBoard = () => {
         id: Date.now() + 1,
         text: data.response || "I'm sorry, I couldn't process your request right now. Please try again later.",
         sender: 'ai',
-        timestamp: new Date()
+        timestamp: new Date(),
+        suggestions: data.suggestions || [],
+        relatedCampaigns: data.relatedCampaigns || []
       };
 
       setMessages(prev => [...prev, aiMessage]);
@@ -74,6 +77,14 @@ const ChatBoard = () => {
       hour: '2-digit', 
       minute: '2-digit' 
     });
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setInputMessage(suggestion);
+    // Auto-send the suggestion
+    setTimeout(() => {
+      handleSendMessage({ preventDefault: () => {} });
+    }, 100);
   };
 
   return (
@@ -101,24 +112,40 @@ const ChatBoard = () => {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
+          <div key={message.id}>
             <div
-              className={`max-w-xs px-4 py-2 rounded-lg ${
-                message.sender === 'user'
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-100 text-gray-800'
-              }`}
+              className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
-              <p className="text-sm">{message.text}</p>
-              <p className={`text-xs mt-1 ${
-                message.sender === 'user' ? 'text-orange-100' : 'text-gray-500'
-              }`}>
-                {formatTime(message.timestamp)}
-              </p>
+              <div
+                className={`max-w-xs px-4 py-2 rounded-lg ${
+                  message.sender === 'user'
+                    ? 'bg-orange-500 text-white'
+                    : 'bg-gray-100 text-gray-800'
+                }`}
+              >
+                <p className="text-sm">{message.text}</p>
+                <p className={`text-xs mt-1 ${
+                  message.sender === 'user' ? 'text-orange-100' : 'text-gray-500'
+                }`}>
+                  {formatTime(message.timestamp)}
+                </p>
+              </div>
             </div>
+
+            {/* Suggestions */}
+            {message.suggestions && message.suggestions.length > 0 && message.sender === 'ai' && (
+              <div className="flex flex-wrap gap-1 mt-2 ml-2">
+                {message.suggestions.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSuggestionClick(suggestion)}
+                    className="text-xs bg-orange-50 text-orange-600 px-2 py-1 rounded-full hover:bg-orange-100 transition-colors border border-orange-200"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         ))}
         

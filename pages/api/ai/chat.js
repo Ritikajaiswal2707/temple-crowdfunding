@@ -53,20 +53,38 @@ export default async function handler(req, res) {
       ]
     };
 
-    // Simple keyword-based response selection
+    // Enhanced keyword-based response selection with context
     const lowerMessage = message.toLowerCase();
     let responseCategory = 'default';
+    let suggestions = [];
+    let relatedCampaigns = [];
 
     if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('namaste')) {
       responseCategory = 'greeting';
+      suggestions = ['How to create a campaign?', 'Browse temple campaigns', 'Learn about donations'];
     } else if (lowerMessage.includes('donate') || lowerMessage.includes('donation') || lowerMessage.includes('money')) {
       responseCategory = 'donation';
+      suggestions = ['Payment methods', 'Tax benefits', 'Browse campaigns'];
+      relatedCampaigns = [
+        { id: '1', title: 'Shri Krishna Temple Renovation', progress: 75 },
+        { id: '2', title: 'Ancient Shiva Temple Restoration', progress: 45 }
+      ];
     } else if (lowerMessage.includes('campaign') || lowerMessage.includes('create') || lowerMessage.includes('start')) {
       responseCategory = 'campaign';
+      suggestions = ['Campaign requirements', 'Best practices', 'Success tips'];
     } else if (lowerMessage.includes('temple') || lowerMessage.includes('mandir') || lowerMessage.includes('worship')) {
       responseCategory = 'temple';
+      suggestions = ['Temple preservation', 'Browse campaigns', 'Success stories'];
+      relatedCampaigns = [
+        { id: '1', title: 'Shri Krishna Temple Renovation', progress: 75 },
+        { id: '2', title: 'Ancient Shiva Temple Restoration', progress: 45 }
+      ];
     } else if (lowerMessage.includes('payment') || lowerMessage.includes('pay') || lowerMessage.includes('razorpay')) {
       responseCategory = 'payment';
+      suggestions = ['Payment security', 'Refund policy', 'Tax benefits'];
+    } else if (lowerMessage.includes('help') || lowerMessage.includes('how') || lowerMessage.includes('what')) {
+      responseCategory = 'default';
+      suggestions = ['Getting started', 'Platform features', 'Contact support'];
     }
 
     // Select random response from category
@@ -84,12 +102,20 @@ export default async function handler(req, res) {
     const finalResponse = randomResponse + additionalInfo;
 
     // Simulate some processing time
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 800));
 
     res.status(200).json({
       success: true,
       response: finalResponse,
-      timestamp: new Date().toISOString()
+      suggestions: suggestions,
+      relatedCampaigns: relatedCampaigns,
+      timestamp: new Date().toISOString(),
+      context: {
+        messageType: lowerMessage.includes('?') ? 'question' : 'statement',
+        hasTempleKeywords: lowerMessage.includes('temple') || lowerMessage.includes('mandir'),
+        hasCampaignKeywords: lowerMessage.includes('campaign') || lowerMessage.includes('fundraising'),
+        responseCategory: responseCategory
+      }
     });
 
   } catch (error) {
