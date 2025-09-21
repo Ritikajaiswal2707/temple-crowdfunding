@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSession, signIn, signOut } from 'next-auth/react'
 
 const Header = () => {
+  const { data: session, status } = useSession()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [lastScrollY, setLastScrollY] = useState(0)
@@ -88,12 +90,28 @@ const Header = () => {
               >
                 Contact
               </button>
-              <button className="bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transition-all duration-300 font-medium">
-                Login
-              </button>
-              <button className="btn-primary text-white px-6 py-2 rounded-full font-medium">
-                Start Campaign
-              </button>
+              {session ? (
+                <>
+                  <Link href="/dashboard" className="text-gray-700 hover:text-orange-500 font-medium transition-colors">
+                    Dashboard
+                  </Link>
+                  <button 
+                    onClick={() => signOut()}
+                    className="bg-gray-500 text-white px-6 py-2 rounded-full hover:bg-gray-600 transition-all duration-300 font-medium"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/auth/signin" className="bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transition-all duration-300 font-medium">
+                    Login
+                  </Link>
+                  <Link href="/campaigns/create" className="btn-primary text-white px-6 py-2 rounded-full font-medium">
+                    Start Campaign
+                  </Link>
+                </>
+              )}
             </div>
             
             {/* Mobile Menu Button */}
@@ -160,12 +178,28 @@ const Header = () => {
                 >
                   📞 Contact
                 </button>
-                <button className="w-full bg-orange-500 text-white py-3 rounded-full font-medium mt-6">
-                  Login
-                </button>
-                <button className="w-full btn-primary text-white py-3 rounded-full font-medium">
-                  Start Campaign
-                </button>
+                {session ? (
+                  <>
+                    <Link href="/dashboard" className="block w-full text-left text-gray-700 hover:text-orange-500 font-medium py-2 text-lg">
+                      📊 Dashboard
+                    </Link>
+                    <button 
+                      onClick={() => signOut()}
+                      className="w-full bg-gray-500 text-white py-3 rounded-full font-medium mt-6"
+                    >
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/auth/signin" className="w-full bg-orange-500 text-white py-3 rounded-full font-medium mt-6 block text-center">
+                      Login
+                    </Link>
+                    <Link href="/campaigns/create" className="w-full btn-primary text-white py-3 rounded-full font-medium block text-center">
+                      Start Campaign
+                    </Link>
+                  </>
+                )}
               </nav>
             </div>
           </div>

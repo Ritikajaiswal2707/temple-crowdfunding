@@ -3,8 +3,23 @@ import dbConnect from '../../../lib/mongodb';
 import Campaign from '../../../models/Campaign';
 import Temple from '../../../models/Temple';
 import User from '../../../models/User';
+import { isMockMode, mockCampaignsApi } from '../../../lib/mockMode';
 
 export default async function handler(req, res) {
+  // Check if mock mode is enabled
+  if (isMockMode()) {
+    try {
+      const result = await mockCampaignsApi(req.query);
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: 'Mock API error',
+        error: error.message
+      });
+    }
+  }
+
   await dbConnect();
 
   if (req.method === 'GET') {

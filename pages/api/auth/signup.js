@@ -1,33 +1,73 @@
-import clientPromise from "../../../lib/mongodb";
-import bcrypt from "bcryptjs";
+// pages/api/auth/signup.js
+import dbConnect from '../../../lib/mongodb';
+import User from '../../../models/User';
+import bcrypt from 'bcryptjs';
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).end();
-
-  const { name, email, password } = req.body;
-
-  if (!name || !email || !password)
-    return res.status(400).json({ message: "All fields are required" });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
 
   try {
-    const client = await clientPromise;
-    const db = client.db("templecrowdfunding");
+    const { name, email, password } = req.body;
 
-    const existingUser = await db.collection("users").findOne({ email });
-    if (existingUser)
-      return res.status(409).json({ message: "User already exists" });
+    // Validate input
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, email, and password are required'
+      });
+    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters long'
+      });
+    }
 
-    await db.collection("users").insertOne({
+    await dbConnect();
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: 'User with this email already exists'
+      });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Create user
+    const user = new User({
       name,
       email,
       password: hashedPassword,
-      createdAt: new Date(),
+      role: 'donor',
+      verified: false
     });
 
-    res.status(201).json({ message: "User created successfully" });
+    await user.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'User created successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
+
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong", error });
+    console.error('Signup error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create user',
+      error: error.message
+    });
   }
 }
