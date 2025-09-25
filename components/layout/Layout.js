@@ -5,7 +5,7 @@ import Footer from './Footer'
 import ChatBoard from '../ChatBoard'
 import DarkModeToggle from '../DarkModeToggle'
 
-const Layout = ({ children, title = 'Temple Crowdfunding - Preserve Sacred Heritage', description = 'Support temple renovations and preserve our sacred heritage through transparent crowdfunding' }) => {
+const Layout = ({ children, title = 'Daansetu - Preserve Sacred Heritage', description = 'Support temple renovations and preserve our sacred heritage through transparent crowdfunding' }) => {
   const [showChat, setShowChat] = useState(false)
 
   return (

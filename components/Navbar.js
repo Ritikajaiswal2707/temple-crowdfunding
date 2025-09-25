@@ -62,7 +62,7 @@ const Navbar = () => {
                 🏛️
               </div>
               <span className="text-2xl font-bold text-gradient font-display">
-                SacredFund
+                Daansetu
               </span>
             </Link>
             
@@ -144,7 +144,7 @@ const Navbar = () => {
             <div className="p-6">
               <div className="flex justify-between items-center mb-8">
                 <span className="text-2xl font-bold text-gradient font-display">
-                  SacredFund
+                  Daansetu
                 </span>
                 <button 
                   onClick={() => setIsMobileMenuOpen(false)}
