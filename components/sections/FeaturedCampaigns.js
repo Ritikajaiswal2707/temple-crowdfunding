@@ -93,6 +93,8 @@ const FeaturedCampaigns = () => {
     );
   }
 
+  const fallbackTemple = 'https://source.unsplash.com/800x600/?temple,india';
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
@@ -124,22 +126,22 @@ const FeaturedCampaigns = () => {
                         src={campaign.images[0]}
                         alt={campaign.title}
                         className="w-full h-full object-cover"
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
                         onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextElementSibling.style.display = 'flex';
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = fallbackTemple;
                         }}
                       />
-                    ) : null}
-                    
-                    {/* Fallback Background with Temple Emoji */}
-                    <div 
-                      className="absolute inset-0 bg-gradient-to-r from-orange-200 to-yellow-200 hidden items-center justify-center"
-                      style={{ display: 'none' }}
-                    >
-                      <div className="text-orange-600 text-5xl" aria-hidden>
-                        🛕
-                      </div>
-                    </div>
+                    ) : (
+                      <img
+                        src={fallbackTemple}
+                        alt={campaign.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
+                      />
+                    )}
 
                     {/* Category Badge */}
                     <div className="absolute top-4 left-4">
