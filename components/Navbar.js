@@ -155,49 +155,49 @@ const Navbar = () => {
                   </svg>
                 </button>
               </div>
-              <nav className="space-y-4">
+              <nav className="flex flex-wrap gap-3">
                 <button
                   onClick={() => scrollToSection('home')}
-                  className="block w-full text-left text-gray-700 hover:text-orange-500 font-medium py-2 text-lg"
+                  className="px-3 py-2 rounded-lg text-gray-700 hover:text-orange-500 font-medium text-base"
                 >
                   🏠 Home
                 </button>
                 <button
                   onClick={() => scrollToSection('campaigns')}
-                  className="block w-full text-left text-gray-700 hover:text-orange-500 font-medium py-2 text-lg"
+                  className="px-3 py-2 rounded-lg text-gray-700 hover:text-orange-500 font-medium text-base"
                 >
                   📋 Campaigns
                 </button>
                 <button
                   onClick={() => scrollToSection('about')}
-                  className="block w-full text-left text-gray-700 hover:text-orange-500 font-medium py-2 text-lg"
+                  className="px-3 py-2 rounded-lg text-gray-700 hover:text-orange-500 font-medium text-base"
                 >
                   ℹ️ About
                 </button>
                 <button
                   onClick={() => scrollToSection('contact')}
-                  className="block w-full text-left text-gray-700 hover:text-orange-500 font-medium py-2 text-lg"
+                  className="px-3 py-2 rounded-lg text-gray-700 hover:text-orange-500 font-medium text-base"
                 >
                   📞 Contact
                 </button>
                 {session ? (
                   <>
-                    <Link href="/dashboard" className="block w-full text-left text-gray-700 hover:text-orange-500 font-medium py-2 text-lg">
+                    <Link href="/dashboard" className="px-3 py-2 rounded-lg text-gray-700 hover:text-orange-500 font-medium text-base">
                       📊 Dashboard
                     </Link>
                     <button 
                       onClick={() => signOut()}
-                      className="w-full bg-gray-500 text-white py-3 rounded-full font-medium mt-6"
+                      className="bg-gray-500 text-white px-4 py-2 rounded-full font-medium mt-2"
                     >
                       Sign Out
                     </button>
                   </>
                 ) : (
                   <>
-                    <Link href="/auth/signin" className="w-full bg-orange-500 text-white py-3 rounded-full font-medium mt-6 block text-center">
+                    <Link href="/auth/signin" className="bg-orange-500 text-white px-4 py-2 rounded-full font-medium mt-2 inline-flex items-center">
                       Login
                     </Link>
-                    <Link href="/campaigns/create" className="w-full btn-primary text-white py-3 rounded-full font-medium block text-center">
+                    <Link href="/campaigns/create" className="btn-primary text-white px-4 py-2 rounded-full font-medium inline-flex items-center">
                       Start Campaign
                     </Link>
                   </>

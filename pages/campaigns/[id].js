@@ -88,6 +88,16 @@ export default function CampaignDetail() {
 
   const progress = Math.min(Math.round((campaign.raisedAmount / campaign.goalAmount) * 100), 100);
   const daysLeft = campaign.deadline ? Math.max(0, Math.ceil((new Date(campaign.deadline) - new Date()) / (1000 * 60 * 60 * 24))) : null;
+  const detailsImageOverride = (() => {
+    const templeName = campaign.temple?.name || '';
+    if (templeName.toLowerCase().includes('tirumala') || templeName.toLowerCase().includes('tirupati')) {
+      return '/images/tirupati.jpg';
+    }
+    if (templeName.toLowerCase().includes('shri ram temple') || templeName.toLowerCase().includes('ram')) {
+      return '/images/oldtemple.JPG';
+    }
+    return null;
+  })();
 
   return (
     <>
@@ -127,6 +137,16 @@ export default function CampaignDetail() {
               {/* Campaign Details */}
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">About This Campaign</h2>
+                {(detailsImageOverride || (campaign.images && campaign.images[0])) && (
+                  <div className="w-full h-64 md:h-72 lg:h-80 mb-6 overflow-hidden rounded-lg">
+                    <img
+                      src={detailsImageOverride || campaign.images[0]}
+                      alt={campaign.title}
+                      className="w-full h-full object-cover object-center"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
                 <div className="prose max-w-none">
                   <p className="text-gray-700 leading-relaxed">{campaign.description}</p>
                 </div>
