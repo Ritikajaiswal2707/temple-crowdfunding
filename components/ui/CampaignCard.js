@@ -1,6 +1,10 @@
 import ProgressRing from './ProgressRing'
 
+// Supports two usages:
+// 1) <CampaignCard campaign={campaign} />
+// 2) Legacy: pass individual props
 const CampaignCard = ({ 
+  campaign,
   id,
   title, 
   location, 
@@ -15,6 +19,17 @@ const CampaignCard = ({
   gradientFrom,
   gradientTo
 }) => {
+  const data = campaign || {}
+  const resolvedTitle = data.title || title
+  const resolvedDescription = data.description || description
+  const resolvedRaised = (data.raisedAmount !== undefined ? data.raisedAmount : raised) || 0
+  const resolvedGoal = (data.goalAmount !== undefined ? data.goalAmount : goal) || 0
+  const resolvedPercentage = (data.progress !== undefined ? data.progress : percentage) || (resolvedGoal ? Math.round((resolvedRaised / resolvedGoal) * 100) : 0)
+  const resolvedDonors = (data.donorCount !== undefined ? data.donorCount : donors) || 0
+  const resolvedStatus = data.status || status || 'active'
+  const resolvedLocation = (data.temple && (data.temple.location?.city || data.temple.name)) || location || ''
+  const resolvedImage = Array.isArray(data.images) && data.images.length > 0 ? data.images[0] : null
+
   const formatAmount = (amount) => {
     if (amount >= 10000000) {
       return `₹${(amount / 10000000).toFixed(1)}Cr`
@@ -67,15 +82,24 @@ const CampaignCard = ({
     return colorMap[color] || colorMap.orange
   }
 
-  const statusBadge = getStatusBadge(status)
+  const statusBadge = getStatusBadge(resolvedStatus)
+  const fallbackTemple = 'https://source.unsplash.com/800x600/?temple,india'
 
   return (
     <div className="temple-card rounded-3xl overflow-hidden shadow-2xl hover:scale-105 transition-all duration-500 campaign-card opacity-0">
-      {/* Temple Image/Icon */}
-      <div 
-        className={`relative h-64 bg-gradient-to-br ${gradientFrom} ${gradientTo} flex items-center justify-center`}
-      >
-        <span className="text-8xl">{icon}</span>
+      {/* Temple Image */}
+      <div className={`relative h-64 bg-gradient-to-br ${gradientFrom || ''} ${gradientTo || ''}`}>
+        <img
+          src={resolvedImage || fallbackTemple}
+          alt={resolvedTitle}
+          className="w-full h-full object-cover"
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          onError={(e) => {
+            e.currentTarget.onerror = null
+            e.currentTarget.src = fallbackTemple
+          }}
+        />
         <div className={`absolute top-4 right-4 ${statusBadge.className} px-3 py-1 rounded-full text-sm font-semibold`}>
           {statusBadge.text}
         </div>
@@ -85,27 +109,27 @@ const CampaignCard = ({
         {/* Location */}
         <div className="flex items-center mb-3">
           <span className="text-orange-500 text-xl">📍</span>
-          <span className="text-gray-500 ml-2 font-medium">{location}</span>
+          <span className="text-gray-500 ml-2 font-medium">{resolvedLocation}</span>
         </div>
         
         {/* Title */}
-        <h3 className="text-2xl font-bold text-gray-800 mb-3">{title}</h3>
+        <h3 className="text-2xl font-bold text-gray-800 mb-3">{resolvedTitle}</h3>
         
         {/* Description */}
-        <p className="text-gray-600 mb-6 line-clamp-3">{description}</p>
+        <p className="text-gray-600 mb-6 line-clamp-3">{resolvedDescription}</p>
         
         {/* Progress Section */}
         <div className="flex items-center justify-between mb-6">
-          <ProgressRing percentage={percentage} color={color} />
+          <ProgressRing percentage={resolvedPercentage} color={color} />
           <div className="text-right">
             <div className="text-2xl font-bold text-gray-800">
-              {formatAmount(raised)}
+              {formatAmount(resolvedRaised)}
             </div>
             <div className="text-gray-500 text-sm">
-              of {formatAmount(goal)} goal
+              of {formatAmount(resolvedGoal)} goal
             </div>
             <div className={`text-sm font-semibold ${color === 'orange' ? 'text-orange-500' : `text-${color}-500`}`}>
-              {donors.toLocaleString()} donors
+              {resolvedDonors.toLocaleString()} donors
             </div>
           </div>
         </div>
