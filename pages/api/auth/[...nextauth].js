@@ -1,3 +1,10 @@
+// Guard: in full mock mode, short-circuit this file to avoid next-auth env import
+if (process.env.MOCK_MODE === 'true') {
+  export default function handler(req, res) {
+    return res.status(200).json({ ok: true, mock: true })
+  }
+}
+
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
