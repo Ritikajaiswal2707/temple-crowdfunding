@@ -88,11 +88,11 @@ const CampaignCard = ({
   return (
     <div className="temple-card rounded-3xl overflow-hidden shadow-2xl hover:scale-105 transition-all duration-500 campaign-card opacity-0">
       {/* Temple Image */}
-      <div className={`relative h-64 bg-gradient-to-br ${gradientFrom || ''} ${gradientTo || ''}`}>
+      <div className={`relative h-56 md:h-60 lg:h-64 overflow-hidden rounded-t-3xl`}>
         <img
           src={resolvedImage || fallbackTemple}
           alt={resolvedTitle}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center"
           loading="lazy"
           referrerPolicy="no-referrer"
           onError={(e) => {

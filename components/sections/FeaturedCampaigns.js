@@ -84,11 +84,11 @@ const FeaturedCampaigns = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {campaigns.map((campaign) => (
                 <div key={campaign.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                  <div className="relative h-48">
+                  <div className="relative h-56 md:h-60 lg:h-64 overflow-hidden rounded-t-lg">
                     <img
                       src={(campaign.images && campaign.images[0]) || fallbackTemple}
                       alt={campaign.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover object-center"
                       loading="lazy"
                       referrerPolicy="no-referrer"
                       onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = fallbackTemple; }}
