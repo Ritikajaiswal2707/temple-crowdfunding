@@ -125,22 +125,19 @@ const FeaturedCampaigns = () => {
                         alt={campaign.title}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          // Use a simple gradient background if image fails to load
                           e.target.style.display = 'none';
                           e.target.nextElementSibling.style.display = 'flex';
                         }}
                       />
                     ) : null}
                     
-                    {/* Fallback Background */}
+                    {/* Fallback Background with Temple Emoji */}
                     <div 
-                      className="absolute inset-0 bg-gradient-to-r from-orange-200 to-yellow-200 flex items-center justify-center"
+                      className="absolute inset-0 bg-gradient-to-r from-orange-200 to-yellow-200 hidden items-center justify-center"
                       style={{ display: 'none' }}
                     >
-                      <div className="text-orange-600">
-                        <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                        </svg>
+                      <div className="text-orange-600 text-5xl" aria-hidden>
+                        🛕
                       </div>
                     </div>
 
