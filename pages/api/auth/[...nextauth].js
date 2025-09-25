@@ -5,12 +5,19 @@ import dbConnect from "../../../lib/mongodb";
 import User from "../../../models/User";
 import bcrypt from "bcryptjs";
 
+const isMock = process.env.MOCK_MODE === 'true' || process.env.NODE_ENV === 'development';
+
 export const authOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
+    // In mock mode, rely only on Credentials with hardcoded users
+    ...(isMock
+      ? []
+      : [
+          GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          }),
+        ]),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -18,23 +25,27 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        // Mock users for offline demo
+        if (isMock) {
+          const demoUsers = [
+            { id: '1', name: 'Admin User', email: 'admin@temple.com', password: 'password123' },
+            { id: '2', name: 'Regular User', email: 'user@temple.com', password: 'password123' },
+          ];
+          const found = demoUsers.find(u => u.email === credentials.email && u.password === credentials.password);
+          if (found) {
+            return { id: found.id, name: found.name, email: found.email };
+          }
+          throw new Error("Invalid credentials");
+        }
+
+        // Real DB auth when not in mock
         try {
           await dbConnect();
-          
-          const user = await User.findOne({
-            email: credentials.email,
-          });
-
+          const user = await User.findOne({ email: credentials.email });
           if (!user) throw new Error("No user found with this email");
-          
           const isValid = await bcrypt.compare(credentials.password, user.password);
           if (!isValid) throw new Error("Invalid password");
-
-          return { 
-            id: user._id.toString(), 
-            name: user.name, 
-            email: user.email 
-          };
+          return { id: user._id.toString(), name: user.name, email: user.email };
         } catch (error) {
           console.error("Auth error:", error);
           throw new Error("Authentication failed");
@@ -47,15 +58,11 @@ export const authOptions = {
   pages: { signIn: "/auth/signin" },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-      }
+      if (user) token.id = user.id;
       return token;
     },
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id;
-      }
+      if (token) session.user.id = token.id;
       return session;
     },
   },

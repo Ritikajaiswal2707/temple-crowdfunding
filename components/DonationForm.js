@@ -48,7 +48,7 @@ const DonationForm = ({ campaign, onClose, onSuccess }) => {
     setIsLoading(true);
 
     try {
-      // Create Razorpay order
+      // Create order (mock or real)
       const orderResponse = await fetch('/api/payment/order', {
         method: 'POST',
         headers: {
@@ -66,7 +66,35 @@ const DonationForm = ({ campaign, onClose, onSuccess }) => {
 
       const order = await orderResponse.json();
 
-      // Initialize Razorpay
+      // If in mock mode, bypass Razorpay UI and call verify directly
+      if (process.env.NEXT_PUBLIC_MOCK_MODE === 'true' || typeof window.Razorpay === 'undefined') {
+        const verifyResponse = await fetch('/api/payment/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            razorpay_order_id: order.id || 'mock_order_id',
+            razorpay_payment_id: 'mock_payment_id',
+            razorpay_signature: 'mock_signature',
+            campaignId: campaign.id,
+            amount: parseFloat(formData.amount),
+            donorInfo: {
+              name: formData.anonymous ? 'Anonymous' : formData.name,
+              email: formData.email,
+              message: formData.message
+            }
+          })
+        });
+
+        if (verifyResponse.ok) {
+          onSuccess && onSuccess();
+          onClose();
+          return;
+        } else {
+          throw new Error('Payment verification failed');
+        }
+      }
+
+      // Initialize Razorpay (real mode)
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: order.amount,
